@@ -1,4 +1,4 @@
-package com.example.wallpaperapp;
+package com.example.apppp;
 
 import org.junit.Test;
 

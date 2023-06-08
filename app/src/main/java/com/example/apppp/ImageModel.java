@@ -1,8 +1,9 @@
-package com.example.wallpaperapp;
+package com.example.apppp;
 
 public class ImageModel {
 
     private UrlModel src;
+
 
     public UrlModel getSrc() {
         return src;

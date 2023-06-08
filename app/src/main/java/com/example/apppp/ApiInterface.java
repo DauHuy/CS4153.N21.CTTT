@@ -1,6 +1,6 @@
-package com.example.wallpaperapp;
+package com.example.apppp;
 
-import static com.example.wallpaperapp.ApiUtilities.API;
+import static com.example.apppp.ApiUtilities.API;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -25,6 +25,9 @@ public interface ApiInterface {
             @Query("page") int page,
             @Query("per_page") int per_page
     );
+
+
+
 
 
 }

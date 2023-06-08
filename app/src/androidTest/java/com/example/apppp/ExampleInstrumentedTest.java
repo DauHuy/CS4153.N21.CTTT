@@ -1,4 +1,4 @@
-package com.example.wallpaperapp;
+package com.example.apppp;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.wallpaperapp", appContext.getPackageName());
+        assertEquals("com.example.apppp", appContext.getPackageName());
     }
 }

@@ -1,18 +1,27 @@
-package com.example.wallpaperapp;
+package com.example.apppp;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import com.example.apppp.Adapter;
+import com.example.apppp.ImageModel;
+import com.example.apppp.Login;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,10 +29,14 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
+    FirebaseAuth auth;
+    Button button;
+    TextView textView;
+    FirebaseUser user;
     private ArrayList<ImageModel> modelClasslist;
     private RecyclerView recyclerView;
     Adapter adapter;
-    CardView mnature,mbus,mcar,mtrain,mtrending;
+    CardView mnature,mmotor,mcat,mcar,mtrending;
     EditText editText;
     ImageButton search;
 
@@ -31,13 +44,47 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+//        setContentView(R.layout.activity_main);
+//        ActionBar sidebar = getSupportActionBar();
+//        if (sidebar != null)
+//        sidebar.hide();
+
+        auth = FirebaseAuth.getInstance();
+        button = findViewById(R.id.logout);
+        textView = findViewById(R.id.user_details);
+        user = auth.getCurrentUser();
+        if (user == null) {
+            Intent intent = new Intent(getApplicationContext(), Login.class);
+            startActivity(intent);
+            finish();
+        }
+        else {
+            textView.setText(user.getEmail());
+        }
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         recyclerView=findViewById(R.id.recylcerview);
         mnature=findViewById(R.id.nature);
+        mcat=findViewById(R.id.cat);
+        mmotor=findViewById(R.id.motorbike);
         mcar=findViewById(R.id.car);
-        mbus=findViewById(R.id.bus);
-        mtrain=findViewById(R.id.train);
         mtrending=findViewById(R.id.trending);
         editText=findViewById(R.id.edittext);
         search=findViewById(R.id.search);
@@ -48,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         adapter=new Adapter(getApplicationContext(),modelClasslist);
         recyclerView.setAdapter(adapter);
         findphotos();
+
+
 
         mnature.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,18 +114,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mtrain.setOnClickListener(new View.OnClickListener() {
+        mcat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String query="train";
+                String query="cat";
                 getsearchimage(query);
             }
         });
 
-        mbus.setOnClickListener(new View.OnClickListener() {
+        mmotor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String query="bus";
+                String query="motorbike";
                 getsearchimage(query);
             }
         });
@@ -133,6 +182,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void addToFavorites(ImageModel item) {
+        modelClasslist.add(item);
+        adapter.notifyItemInserted(modelClasslist.size() - 1);
+    }
+
+
+    private void removeFromFavorites(ImageModel item) {
+        int position = modelClasslist.indexOf(item);
+        if (position >= 0) {
+            modelClasslist.remove(position);
+            adapter.notifyItemRemoved(position);
+        }
     }
 
     private void findphotos() {

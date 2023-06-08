@@ -1,4 +1,4 @@
-package com.example.wallpaperapp;
+package com.example.apppp;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     Context context;
     ArrayList<ImageModel> wallpaperList;
 
+
+
     public Adapter(Context context, ArrayList<ImageModel> wallpaperList) {
         this.context = context;
         this.wallpaperList = wallpaperList;
@@ -33,14 +35,22 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     @NonNull
     @Override
-    public Adapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(context).inflate(R.layout.item_layout,null,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Adapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        //ImageModel item = wallpaperList.get(position);
+        //holder.textView.setText((CharSequence) item.getSrc());
+        // Set click listener for the favorite button
+        //holder.imageView.setOnClickListener(v -> {
+            // Remove the item from the favorite list
+           // wallpaperList.remove(position);
+            //notifyItemRemoved(position);
+        //});
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,12 +67,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             }
         });
 
-        Glide.with(context).load(wallpaperList.get(position).getSrc().getPortait()).into(holder.imageView);
+        Glide.with(context).load(wallpaperList.get(position).getSrc().getPortrait()).into(holder.imageView);
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(context,setwallpaper.class);
-                intent.putExtra("image",wallpaperList.get(position).getSrc().getPortait());
+                intent.putExtra("image",wallpaperList.get(position).getSrc().getPortrait());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -80,6 +90,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
 
         ImageView imageView;
         TextView textView;
